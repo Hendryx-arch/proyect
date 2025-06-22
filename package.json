@@ -12,14 +12,16 @@
   "license": "ISC",
   "type": "module",
   "devDependencies": {
-    "standard": "^17.1.2"
-  },
-  "dependencies": {
     "express": "5.1.0",
-    "mysql2": "^3.14.1",
-    "socket.io": "^4.8.1"
+    "mysql2": "3.14.1",
+    "socket.io": "4.8.1",
+    "standard": "^17.1.2"
   },
   "eslintConfig": {
     "extends": "standard"
+  },
+  "dependencies": {
+    "bcryptjs": "^3.0.2",
+    "multer": "^2.0.1"
   }
 }
