@@ -5,17 +5,22 @@ import logger from 'morgan'
 import { fileURLToPath } from 'node:url'
 import { dirname, join } from 'node:path'
 
+import dotenv from 'dotenv'
+
+dotenv.config()
 
 import { pool, connectDB } from '../db/conexion.js'
 
 import userRoutes from '../routes/usuario.js'
 import prodRoutes from '../routes/producto.js'
+import autentificacion from '../routes/autentificaion.js'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)
 
 const app = express()
 app.use(logger('dev'))
+
 app.use(express.json())
 
 app.use(express.static(join(__dirname, '..', 'vistas')))
@@ -39,8 +44,10 @@ io.on('connection', (socket) => {
 })
 app.use('/api/users', userRoutes)
 app.use('/api/prod', prodRoutes)
+app.use('/api/aut', autentificacion)
+
 app.get('/', (req, res) => {
-  res.sendFile(join(__dirname, '..', 'vistas', 'bienvenido.html'))
+  res.sendFile(join(__dirname, '..', 'vistas', 'login.html'))
 })
 
 const PORT = process.env.PORT ?? 3000

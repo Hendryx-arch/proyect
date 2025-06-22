@@ -1,0 +1,8 @@
+###probamos el login
+POST http://localhost:3000/api/aut/admin/login
+Content-Type: application/json
+
+{
+    "correo": "Henrry@gmail.com",
+    "contra": "pesado123"
+}

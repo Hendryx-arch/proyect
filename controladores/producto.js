@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 import { pool } from '../db/conexion.js'
 
 export const createProd = async (req, res) => {
@@ -22,7 +23,7 @@ export const createProd = async (req, res) => {
       id: result.insertId,
       nombre,
       precio,
-      imagen
+      image_url
     })
   } catch (error) {
     console.error('Error al crear producto:', error)
