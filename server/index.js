@@ -5,15 +5,18 @@ import logger from 'morgan'
 import { fileURLToPath } from 'node:url'
 import { dirname, join } from 'node:path'
 
+
 import { pool, connectDB } from '../db/conexion.js'
 
 import userRoutes from '../routes/usuario.js'
+import prodRoutes from '../routes/producto.js'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)
 
 const app = express()
 app.use(logger('dev'))
+app.use(express.json())
 
 app.use(express.static(join(__dirname, '..', 'vistas')))
 
@@ -34,7 +37,8 @@ io.on('connection', (socket) => {
     console.log('cliente desconectado')
   })
 })
-app.use('/api/users', userRoutes);
+app.use('/api/users', userRoutes)
+app.use('/api/prod', prodRoutes)
 app.get('/', (req, res) => {
   res.sendFile(join(__dirname, '..', 'vistas', 'bienvenido.html'))
 })
