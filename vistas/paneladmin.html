@@ -1,11 +1,100 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Panel de Administración - Mi Tienda Online</title>
+    <link rel="stylesheet" href="src/views/css/style.css">
 </head>
 <body>
-    
-</body>
+    <div class="dashboard-container">
+        <aside class="sidebar">
+            <div class="logo">Admin Panel</div>
+            <nav class="main-nav">
+                <ul>
+                    <li><a href="#" id="nav-dashboard" class="active">📊 Panel Principal</a></li>
+                    <li><a href="#" id="nav-products">📦 Gestión de Productos</a></li>
+                    <li><a href="#" id="nav-orders">🛒 Gestión de Pedidos</a></li>
+                    <li><a href="#" id="nav-clients">🧑‍🤝‍🧑 Gestión de Clientes</a></li>
+                    <li><a href="#" id="nav-employees">🚚 Gestión de Empleados/Repartidores</a></li>
+                    <li><a href="#" id="nav-branches">🏢 Gestión de Sucursales</a></li>
+                    <li><a href="#" id="nav-categories">🏷️ Gestión de Categorías</a></li>
+                    <li><a href="#" id="nav-reports">📈 Reportes y Estadísticas</a></li>
+                </ul>
+            </nav>
+            <div id="logout-container" class="logout" style="display: none;"> <button id="btn-logout">Cerrar Sesión</button>
+            </div>
+        </aside>
+
+        <main class="content-area">
+            <header class="top-bar">
+                <h1>Bienvenido al Panel de Administración</h1>
+                <div class="user-info">
+                    <span>Hola, María</span>
+                </div>
+            </header>
+
+            <section id="dashboard-section" class="content-section active">
+                <h2>Resumen General</h2>
+                <p>Aquí puedes ver un vistazo rápido de las métricas clave de tu negocio.</p>
+                </section>
+             <section id="products-section" class="content-section">
+                <h2>Gestión de Productos</h2>
+                <button id="add-product-btn" class="add-new-btn">➕ Añadir Nuevo Producto</button>
+                
+                <div id="product-list-view">
+                    <h3>Lista de Productos</h3>
+                    <p id="product-list-message">Cargando productos...</p>
+                    <table class="data-table" id="products-table" style="display: none;">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Nombre</th>
+                                <th>Precio</th>
+                                <th>Stock</th>
+                                <th>Categoría</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            </tbody>
+                    </table>
+                </div>
+
+                <div id="product-form-view" class="detail-form-container" style="display:none;">
+                    <h3 id="product-form-title">Añadir Nuevo Producto</h3>
+                    <form id="product-form">
+                        <label for="product-id">ID Producto:</label>
+                        <input type="text" id="product-id" name="id" readonly disabled><br>
+
+                        <label for="product-name">Nombre:</label>
+                        <input type="text" id="product-name" name="name" required><br>
+
+                        <label for="product-price">Precio ($):</label>
+                        <input type="number" id="product-price" name="price" step="0.01" min="0" required><br>
+
+                        <label for="product-stock">Stock:</label>
+                        <input type="number" id="product-stock" name="stock" min="0" required><br>
+                        
+                        <label for="product-category">Categoría:</label>
+                        <select id="product-category" name="category" required>
+                            <option value="">Selecciona una categoría</option>
+                        </select><br>
+
+                        <label for="product-description">Descripción:</label>
+                        <textarea id="product-description" name="description" rows="4"></textarea><br>
+
+                        <button type="submit" class="primary-btn" id="save-product-btn">Guardar Producto</button>
+                        <button type="button" class="back-list-btn" id="back-to-products-list-btn">Volver a Productos</button>
+                        <p id="product-form-message" class="error-text"></p>
+                    </form>
+                </div>
+            </section>
+            <section id="orders-section" class="content-section">
+                <h2>Gestión de Pedidos</h2>
+                </section>
+            </main>
+    </div>
+
+    <script src="src/views/js/script.js"></script> </body>
 </html>
