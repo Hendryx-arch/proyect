@@ -7,13 +7,13 @@ import { dirname, join } from 'node:path'
 
 import dotenv from 'dotenv'
 
-dotenv.config()
-
 import { pool, connectDB } from '../db/conexion.js'
 
 import userRoutes from '../routes/usuario.js'
 import prodRoutes from '../routes/producto.js'
 import autentificacion from '../routes/autentificaion.js'
+
+dotenv.config()
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)

@@ -4,6 +4,7 @@ import jwt from 'jsonwebtoken'
 import dotenv from 'dotenv'
 
 dotenv.config()
+const JWT_SECRET = process.env.JWT_SECRET
 
 export const loginAdmin = async (req, res) => {
   const { correo, contra } = req.body
