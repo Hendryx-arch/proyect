@@ -101,6 +101,57 @@
             <section id="orders-section" class="content-section">
                 <h2>Gestión de Pedidos</h2>
                 </section>
+            <section id="clients-section" class="content-section">
+                <h2>Gestión de Clientes</h2>
+                <button id="add-client-btn" class="add-new-btn">➕ Añadir Nuevo Cliente</button>
+
+                <div id="client-list-view">
+                    <h3>Lista de Clientes</h3>
+                    <p id="client-list-message">Cargando clientes...</p>
+                    <table class="data-table" id="clients-table" style="display: none;">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Nombres</th>
+                                <th>Apellidos</th>
+                                <th>Email</th>
+                                <th>Teléfono</th>
+                                <th>Dirección</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            </tbody>
+                    </table>
+                </div>
+
+                <div id="client-form-view" class="detail-form-container" style="display:none;">
+                    <h3 id="client-form-title">Añadir Nuevo Cliente</h3>
+                    <form id="client-form">
+                        <label for="client-id">ID Cliente:</label>
+                        <input type="text" id="client-id" name="id" readonly disabled><br>
+
+                        <label for="client-names">Nombres:</label>
+                        <input type="text" id="client-names" name="nombres" required><br>
+
+                        <label for="client-lastnames">Apellidos:</label>
+                        <input type="text" id="client-lastnames" name="apellidos" required><br>
+
+                        <label for="client-email">Email:</label>
+                        <input type="email" id="client-email" name="email" required><br>
+
+                        <label for="client-phone">Teléfono:</label>
+                        <input type="text" id="client-phone" name="telefono"><br>
+
+                        <label for="client-address">Dirección:</label>
+                        <textarea id="client-address" name="direccion" rows="3"></textarea><br>
+
+                        <button type="submit" class="primary-btn" id="save-client-btn">Guardar Cliente</button>
+                        <button type="button" class="back-list-btn" id="back-to-clients-list-btn">Volver a Clientes</button>
+                        <p id="client-form-message" class="error-text"></p>
+                    </form>
+                </div>
+            </section>    
             </main>
     </div>
 
