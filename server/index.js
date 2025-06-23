@@ -7,11 +7,10 @@ import { dirname, join } from 'node:path'
 
 import dotenv from 'dotenv'
 
-import { pool, connectDB } from '../db/conexion.js'
-
 import userRoutes from '../routes/usuario.js'
 import prodRoutes from '../routes/producto.js'
 import autentificacion from '../routes/autentificaion.js'
+import categorias from '../routes/categorias.js'
 
 dotenv.config()
 
@@ -22,7 +21,7 @@ const app = express()
 app.use(logger('dev'))
 
 app.use(express.json())
-
+app.use(express.static('public'))
 app.use(express.static(join(__dirname, '..', 'vistas')))
 
 const server = createServer(app)
@@ -45,6 +44,7 @@ io.on('connection', (socket) => {
 app.use('/api/users', userRoutes)
 app.use('/api/prod', prodRoutes)
 app.use('/api/aut', autentificacion)
+app.use('/api/categorias', categorias)
 
 app.get('/', (req, res) => {
   res.sendFile(join(__dirname, '..', 'vistas', 'login.html'))

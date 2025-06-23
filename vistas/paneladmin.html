@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
+
     <div class="dashboard-container">
         <aside class="sidebar">
             <div class="logo">Admin Panel</div>
@@ -30,7 +31,7 @@
             <header class="top-bar">
                 <h1>Bienvenido al Panel de Administración</h1>
                 <div class="user-info">
-                    <span>Hola, María</span>
+                    <span><p id="welcomeMessage"></p></span>
                 </div>
             </header>
 
@@ -63,14 +64,14 @@
 
                 <div id="product-form-view" class="detail-form-container" style="display:none;">
                     <h3 id="product-form-title">Añadir Nuevo Producto</h3>
-                    <form id="product-form">
+                    <form id="product-form" enctype="multipart/form-data">
                         <label for="product-id">ID Producto:</label>
                         <input type="text" id="product-id" name="id" readonly disabled><br>
 
                         <label for="product-name">Nombre:</label>
                         <input type="text" id="product-name" name="name" required><br>
 
-                        <label for="product-price">Precio ($):</label>
+                        <label for="product-price">Precio (Bs):</label>
                         <input type="number" id="product-price" name="price" step="0.01" min="0" required><br>
 
                         <label for="product-stock">Stock:</label>
@@ -79,10 +80,17 @@
                         <label for="product-category">Categoría:</label>
                         <select id="product-category" name="category" required>
                             <option value="">Selecciona una categoría</option>
+                        
                         </select><br>
 
                         <label for="product-description">Descripción:</label>
                         <textarea id="product-description" name="description" rows="4"></textarea><br>
+                        
+                        <label for="product-image">Imagen de Producto:</label>
+                        <input type="file" id="product-image" name="imagenproducto" accept="image/*">
+                        <div class="form-group">
+                            <img id="image-preview" src="" alt="Vista previa de la imagen" style="max-width: 150px; max-height: 150px; margin-top: 10px; display: none;">
+                        </div>
 
                         <button type="submit" class="primary-btn" id="save-product-btn">Guardar Producto</button>
                         <button type="button" class="back-list-btn" id="back-to-products-list-btn">Volver a Productos</button>

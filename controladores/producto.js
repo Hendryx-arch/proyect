@@ -1,8 +1,7 @@
-/* eslint-disable camelcase */
 import { pool } from '../db/conexion.js'
 
 export const createProd = async (req, res) => {
-  const { nombre, descripcion, categoria, precio, cantidad, disp } = req.body
+  const { nombre, descripcion, categoria, precio, cantidad } = req.body
   const image_file = req.file
 
   // validacion
@@ -15,11 +14,11 @@ export const createProd = async (req, res) => {
   }
   try {
     const [result] = await pool.execute(
-      'INSERT INTO producto (nombre,descripcion,categoria,precio,cantidad,disp,imagen) VALUES (?,?,?,?,?,?,?)',
-      [nombre, descripcion, categoria, precio, cantidad, disp, image_url]
+      'INSERT INTO producto (nombre,descripcion,categoria,precio,cantidad,imagen) VALUES (?,?,?,?,?,?)',
+      [nombre, descripcion, categoria, precio, cantidad, image_url]
     )
     res.status(201).json({
-      message: 'prodicto Creado exitosamente',
+      message: 'producto Creado exitosamente',
       id: result.insertId,
       nombre,
       precio,
@@ -36,7 +35,7 @@ export const createProd = async (req, res) => {
 }
 export const getProd = async (req, res) => {
   try {
-    const [rows] = await pool.execute('SELECT id,nombre,descripcion,categoria,precio,cantidad,disp,imagen FROM producto')
+    const [rows] = await pool.execute('SELECT id,nombre,descripcion,categoria,precio,cantidad,imagen FROM producto')
     res.json(rows)
   } catch (error) {
     console.error('Error al obtener productos:', error)
@@ -45,7 +44,7 @@ export const getProd = async (req, res) => {
 }
 export const updateProd = async (req, res) => {
   const { id } = req.params
-  const { nombre, descripcion, categoria, precio, cantidad, disp } = req.body
+  const { nombre, descripcion, categoria, precio, cantidad } = req.body
   const image_file = req.file
 
   let image_url_upd = null
@@ -72,13 +71,9 @@ export const updateProd = async (req, res) => {
     updateFileds.push('cantidad = ?')
     queryParams.push(cantidad)
   }
-  if (disp !== undefined) {
-    updateFileds.push('disp = ?')
-    queryParams.push(disp)
-  }
   if (image_file) {
     image_url_upd = `/uploads/productos/${image_file.filename}`
-    updateFileds.push('imagen_url = ?')
+    updateFileds.push('imagen = ?')
     queryParams.push(image_url_upd)
 
     // Opcional: Lógica para eliminar la imagen antigua si existía

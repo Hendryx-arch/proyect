@@ -1,9 +1,7 @@
 import { pool } from '../db/conexion.js'
 import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
-import dotenv from 'dotenv'
 
-dotenv.config()
 const JWT_SECRET = process.env.JWT_SECRET
 
 export const loginAdmin = async (req, res) => {
@@ -28,7 +26,7 @@ export const loginAdmin = async (req, res) => {
     const user = rows[0]
     const userRol = rows.map(row => row.rol)
     // verificamos que el user sea administrador
-    if (user.rol !== 'Administrador') {
+    if (!userRol.includes('Administrador')) {
       return res.status(403).json({ message: ' Acceso denegado no eres admin' })
     }
 
@@ -42,7 +40,7 @@ export const loginAdmin = async (req, res) => {
       {
         id: user.id,
         correo: user.correo,
-        rol: user.rol // con token para futura autorizacion
+        roles: userRol // con token para futura autorizacion
       },
       JWT_SECRET,
       { expiresIn: '1h' }// el tiempo en que expira el token

@@ -3,14 +3,14 @@ GET http://localhost:3000/api/users
 ### para consultar usuarios por id
 GET http://localhost:3000/api/users/1
 ### para crear un usuario
-POST http://localhost:3000/api/users
+POST http://localhost:3000/api/users/
 Content-Type: application/json
 
 {
-    "nombres": "Juan Fernando",
-    "apellidos": "Perez Soliz",
-    "ci": 3423214,
-    "correo": "juan.perez@example.com",
-    "telefono": "12345678",
-    "contra": "miContraseniaSegura123"
+    "nombres": "Luis ",
+    "apellidos": "Gomez Soliz",
+    "ci": 3493824,
+    "correo": "luis.gomez@example.com",
+    "telefono": "54345622",
+    "contra": "mycontraseña"
 }
