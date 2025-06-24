@@ -11,7 +11,7 @@ import userRoutes from '../routes/usuario.js'
 import prodRoutes from '../routes/producto.js'
 import autentificacion from '../routes/autentificaion.js'
 import categorias from '../routes/categorias.js'
-
+import rolRoutes from '../routes/roles.js'
 dotenv.config()
 
 const __filename = fileURLToPath(import.meta.url)
@@ -45,7 +45,7 @@ app.use('/api/users', userRoutes)
 app.use('/api/prod', prodRoutes)
 app.use('/api/aut', autentificacion)
 app.use('/api/categorias', categorias)
-
+app.use('/api/roles',rolRoutes)
 app.get('/', (req, res) => {
   res.sendFile(join(__dirname, '..', 'vistas', 'login.html'))
 })

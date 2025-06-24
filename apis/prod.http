@@ -1,14 +1,14 @@
 ##probamos la api
-GET http://localhost:3000/api/prod
+GET http://localhost:3000/api/prod/
 ###cargamos un registro de producto
 POST http://localhost:3000/api/prod
 Content-Type: application/json
 
 {
-    "nombre":"pollo frito",
-    "descripcion":"pollo frito clasico con un delicioso sabro ",
-    "categoria":"Pollos",
-    "precio":"10,50",
-    "cantidad":"20",
-    "imagen":"/home/henrry/Imágenes/pollos/pollo-frito.jpg"
+    "nombre":"coca cola",
+    "descripcion":"coca cola persona  ",
+    "categoria":"Refrescos",
+    "precio":"2.50",
+    "cantidad":"50",
+    "imagen":"/home/henrry/Imágenes/refrescos/coca_cola_190ml.webp"
 }   

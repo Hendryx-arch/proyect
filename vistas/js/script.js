@@ -21,10 +21,30 @@ document.addEventListener('DOMContentLoaded', async () => {
   const productListMessage = document.getElementById('product-list-message')
   const productFormMessage = document.getElementById('product-form-message')
   const backToProductsListBtn = document.getElementById('back-to-products-list-btn')
-// NUEVAS VARIABLES PARA IMAGENES
+  // NUEVAS VARIABLES PARA IMAGENES
   const productImageInput = document.getElementById('product-image') // <-- Asegúrate que este ID exista en tu HTML
   const imagenPreview = document.getElementById('image-preview') // <-- Asegúrate que este ID exista en tu HTML
-  // FIN NUEVAS VARIABLES
+  // --- Nuevas referencias DOM para Usuarios ---
+  const userList = document.getElementById('users-list')
+  const userTable = document.getElementById('user-table')
+  const usersTableBody = document.querySelector('#users-table-body tbody')
+  const addUserBtn = document.getElementById('add-user-btn')
+  const userFormView = document.getElementById('user-form-view')
+  const userForm = document.getElementById('user-form')
+  const saveUserBtn = document.getElementById('save-user-btn')
+  const backToUsersListBtn = document.getElementById('back-to-users-list-btn')
+  const userFormMessage = document.getElementById('users-form-message')
+  const usersListMessage = document.getElementById('users-list-message')
+  // --- NUEVAS referencias DOM para Roles de Usuario ---
+  const userRolesFormContainer = document.getElementById('user-roles-form-container')
+  const userRolesNameSpan = document.getElementById('user-roles-name')
+  const userRolesIdInput = document.getElementById('user-roles-id')
+  const rolesCheckboxesDiv = document.getElementById('roles-checkboxes')
+  const saveUserRolesBtn = document.getElementById('save-user-roles-btn')
+  const backToUserDetailsBtn = document.getElementById('back-to-user-details-btn')
+  const userRolesFormMessage = document.getElementById('user-roles-message')
+  const manageRolesBtn = document.getElementById('manage-roles-btn') // El botón "Gestionar Roles"
+  // FIN NUEVAS VARIABLESc
 
   // --- FUNCIÓN PRINCIPAL DE VERIFICACIÓN AL CARGAR LA PÁGINA ---
   function checkAuthenticationOnInit () {
@@ -107,6 +127,17 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
   }
   // --- FIN FUNCIÓN DE LLAMADAS SEGURAS ---
+  // Manejar clics en la barra de navegación
+  navLinks.forEach(link => {
+    link.addEventListener('click', async (event) => { // ¡Importante: async para usar await!
+      event.preventDefault()
+
+      navLinks.forEach(item => item.classList.remove('active'))
+      link.classList.add('active')
+      const targetSectionId = link.id.replace('nav-', '') + '-section'
+      showSection(targetSectionId)
+    })
+  })
 
   // --- LÓGICA DE NAVEGACIÓN Y FUNCIONALIDAD DEL PANEL ---
   function showSection (sectionId) {
@@ -118,32 +149,14 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (sectionId === 'products-section') {
       showProductListView()
       loadProducts()
-    } else {
+    } else if (sectionId === 'users-section') { // *** NUEVO: Para la sección de usuarios ***
+      showUserListView()
+      loadUsers() // Carga los usuarios al entrar en la sección
+    } else { // y cargar aqui para los demas navegadores
       document.querySelectorAll('.detail-form-container').forEach(detail => detail.style.display = 'none')
       document.querySelectorAll('div[id$="-list"]').forEach(list => list.style.display = 'block')
     }
   }
-
-  // Manejar clics en la barra de navegación
-  navLinks.forEach(link => {
-    link.addEventListener('click', async (event) => { // ¡Importante: async para usar await!
-      event.preventDefault()
-      navLinks.forEach(item => item.classList.remove('active'))
-      link.classList.add('active')
-      const targetSectionId = link.id.replace('nav-', '') + '-section'
-      showSection(targetSectionId)
-
-      // Ejemplo: Al hacer clic en "Gestionar Productos", intenta cargar los datos
-      if (targetSectionId === 'products-section') {
-        await loadProducts() // Llama a la función que cargará los productos de forma segura
-      } else if (targetSectionId === 'clients-section') {
-        // aqui deberia haber una funcion similar a loadproductos()
-      } else if (targetSectionId === 'oreder-section') {
-        // lo mismo pero para ordenes/pedidoss
-      }
-      // tambien puedes añadir mas funciones si es necesario
-    })
-  })
 
   // FUNCIONALIDAD ESPECIFICA DE GESTION DE PRODUCTOS
   // Manejar los botones "Volver a [Lista]" (sin cambios significativos)
@@ -159,7 +172,48 @@ document.addEventListener('DOMContentLoaded', async () => {
   function showProductFormView () {
     productListView.style.display = 'none'
     productFormView.style.display = 'block'
-    productFormMessage.textContent = '' // Limpiar mensajes de error/éxito
+    userRolesFormContainer.style.display = 'none'
+    productFormMessage.textContent = 'Llena los campos' // Limpiar mensajes de error/éxito
+  }
+  function showUserListView () {
+    userFormView.style.display = 'none'
+    userList.style.display = 'block'
+    document.getElementById('users-list').style.display = 'table'
+    userRolesFormContainer.style.display = 'none'
+    usersListMessage.textContent = 'cargando usuarios'
+    usersListMessage.style.display = 'block'
+  }
+  function showUserRolesForm () {
+    document.getElementById('users-list').style.display = 'none'
+    userFormView.style.display = 'none' // Ocultar el formulario principal del usuario
+    userRolesFormContainer.style.display = 'block'
+  }
+
+  async function fetchAllRoles () {
+    try {
+      allAvaliableRoles = await callApiSecured('/api/roles')
+      console.log('Roles disponibles:', allAvaliableRoles)
+    } catch (error) {
+      console.error('Error al cargar roles disponibles', error)
+      alert('no se puedieron cargar los roles disponibles.')
+    }
+  }
+
+  function populateRoleCheckboxes (userId, userName, assigneRole = []) {
+    userRolesNameSpan.textContent = userName
+    userRolesIdInput.value = userId
+    rolesCheckboxesDiv, innerHTML = ''
+    if (allAvaliableRoles.length === 0) {
+      rolesCheckboxesDiv.innerHTML = '<p>No hay roles disponibles.</p>'
+      return
+    }
+    allAvaliableRoles.forEach(role => {
+      const isChecked = assigneRole.includes(role.id)
+      rolesCheckboxesDiv.innerHTML += `
+        <input type="checkbox" id="role-${role.id}" name="roleIds" value="${role.id}" ${isChecked ? 'checked' : ''}>
+        <label for="role-${role.id}">${role.nombre_rol}</label><br>
+        `
+    })
   }
 
   // [C]REATE & [U]PDATE: Guardar o Actualizar Producto
@@ -216,15 +270,15 @@ document.addEventListener('DOMContentLoaded', async () => {
       document.getElementById('products-table').style.display = 'table' // Mostrar tabla
 
       products.forEach(product => {
-        const imagenUrl = product.imagen ? `/uploads/productos/${product.imagen}` : 'path/to/default/imagen.png'
+        const finalImageUrl = product.imagen
         const row = productsTableBody.insertRow()
         row.innerHTML = `
                     <td>${product.id}</td>
                     <td>${product.nombre}</td>
-                    <td>$$${typeof product.precio === 'number' ? product.precio.toFixed(2) : 'N/A'}</td>
+                    <td>${typeof product.precio === 'number' ? product.precio.toFixed(2) : ''}</td>
                     <td>${product.cantidad}</td>
                     <td>${product.categoria || 'Sin Categoría'}</td> 
-                    <td><img src="${imagenUrl}" alt="${product.nombre}" style="width: 50px; height:50px;object-fit: cover; "
+                    <td><img src="${finalImageUrl}" alt="${product.nombre}" style="width: 50px; height:50px;object-fit: cover; "
                     </td>
                     <td>
                         <button class="action-btn edit-btn" data-id="${product.id}">Editar</button>
@@ -375,20 +429,191 @@ document.addEventListener('DOMContentLoaded', async () => {
   async function loadOrders () {
     const ordersSection = document.getElementById('orders-section')
     if (!ordersSection) return
-      ordersSection.innerHTML = '<h2>Gestion de pedidos </h1><p>cargando pedidos...</p>'
-    
+    ordersSection.innerHTML = '<h2>Gestion de pedidos </h1><p>cargando pedidos...</p>'
+
     ordersSection.innerHTML = '<h2>Gestión de Pedidos</h2><p>Cargando pedidos...</p>'
     // const orders = await callApiSecured('/api/orders');
     // if (orders) { /* ... lógica para mostrar pedidos ... */ }
   }
+  // -----SECCION DE USUARIOS---------
+  // --- Funciones para la vista de Usuarios ---
+  // Mostrar la vista de lista de usuarios y ocultar el formulario
 
-  async function loadClients () {
-    const clientsSection = document.getElementById('clients-section')
-    if (!clientsSection) return // Asegurarse de que la sección exista
-    clientsSection.innerHTML = '<h2>Gestión de Clientes</h2><p>Cargando clientes...</p>'
-    // const clients = await callApiSecured('/api/users'); // Asumiendo /api/users
-    // if (clients) { /* ... lógica para mostrar clientes ... */ }
+  // Mostrar el formulario de usuario y ocultar la lista
+  function showUserForm () {
+    userList.style.display = 'none'
+    userFormView.style.display = 'block'
+    userFormMessage.textContent = 'llena los datos'
   }
+  // [R]ead mostrar los usuarios
+  async function loadUsers () {
+    usersTableBody.innerHTML = '' // Limpiar tabla
+    usersListMessage.textContent = 'Cargando usuarios...'
+    usersListMessage.style.display = 'block'
+    document.getElementById('users-table-body').style.display = 'none'
+
+    // const users = callApiSecured('/api/users')
+
+    try {
+      const users = await callApiSecured('/api/users') // Llamada a tu API de usuarios
+
+      if (users && users.length > 0) {
+        usersListMessage.style.display = 'none'
+        document.getElementById('users-table-body').style.display = 'table'
+
+        users.forEach(user => {
+          const row = usersTableBody.insertRow()
+          row.innerHTML = `
+                    <td>${user.id}</td>
+                    <td>${user.nombres}</td>
+                    <td>${user.apellidos}</td>
+                    <td>${user.ci}</td>
+                    <td>${user.correo}</td>
+                    <td>${user.telefono}</td>
+                    <td>${user.roles} </td>
+                    <td>
+                        <button class="action-btn edit-user-btn" data-id="${user.id}">Editar</button>
+                        <button class="action-btn delete-user-btn" data-id="${user.id}">Eliminar</button>
+                    </td>
+                `
+        })
+        attachUserTableListeners() // Adjuntar listeners a los botones de la tabla
+      } else if (users) {
+        usersListMessage.textContent = 'No hay usuarios registrados.'
+        usersListMessage.style.display = 'block'
+        document.getElementById('users-table').style.display = 'none'
+      } else {
+        usersListMessage.textContent = 'Error al cargar usuarios.'
+        usersListMessage.style.display = 'block'
+        document.getElementById('users-list').style.display = 'none'
+      }
+    } catch (error) {
+      console.error('Error al cargar usuarios:', error)
+      usersListMessage.textContent = 'Error al cargar usuarios: ' + (error.message || 'Error desconocido')
+      usersListMessage.style.display = 'block'
+      document.getElementById('users-list').style.display = 'none'
+    }
+  }
+
+  // Cargar usuario para edición
+  async function loadUserForEdit (userId) {
+    try {
+      const user = await callApiSecured(`/api/users/${userId}`)
+      document.getElementById('user-id').value = user.id
+      document.getElementById('user-name').value = user.nombres
+      document.getElementById('user-apellido').value = user.apellidos
+      document.getElementById('user-ci').value = user.ci
+      document.getElementById('user-telefono').value = user.telefono
+      document.getElementById('user-email').value = user.correo
+      // No se rellena la contraseña por seguridad
+      document.getElementById('user-password').value = '' // Vaciar siempre
+
+      manageRolesBtn.style.display = 'inline-block'
+      manageRolesBtn.dataset.userId = user.id
+      manageRolesBtn.dataset.userName = user.nombre
+      manageRolesBtn.dataset.assigneRole = JSON.stringify(user.assigRol || [])
+
+      saveUserBtn.textContent = 'Actualizar Informacion'
+      userFormMessage.textContent = ''
+      showUserForm()
+    } catch (error) {
+      console.error('Error al cargar usuario para edición:', error)
+      alert('Error al cargar el usuario: ' + (error.message || 'Error desconocido'))
+    }
+  }
+  // Listener para el botón "Añadir Nuevo Usuario"
+  addUserBtn.addEventListener('click', () => {
+    userForm.reset() // Limpiar el formulario
+    document.getElementById('user-id').value = '' // Asegurarse de que el ID esté vacío para nueva creación
+    saveUserBtn.textContent = 'Guardar Usuario'
+    userFormMessage.textContent = ''
+    showUserForm()
+  })
+
+  // Listener para el botón "Volver a Usuarios"
+  backToUsersListBtn.addEventListener('click', () => {
+    showUserListView()
+    loadUsers() // Recargar la lista al volver
+  })
+
+  // Manejar el envío del formulario de usuario
+  userForm.addEventListener('submit', async (event) => {
+    event.preventDefault()
+    const userId = document.getElementById('user-id').value
+    const formData = new FormData(userForm) // FormData para facilitar la recolección
+    const userData = Object.fromEntries(formData.entries())
+
+    // Eliminar el campo de ID si es una creación nueva
+    if (!userId) {
+      delete userData.id
+    }
+
+    // Si la contraseña está vacía, no la envíes para actualización
+    if (userId && userData.contrasena === '') {
+      delete userData.contrasena
+    }
+
+    try {
+      let response
+      if (userId) { // Si hay un ID, es una actualización (PUT)
+        response = await callApiSecured(`/api/users/${userId}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(userData)
+        })
+      } else { // Si no hay ID, es una creación (POST)
+        response = await callApiSecured('/api/users', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(userData)
+        })
+      }
+
+      if (response.message) {
+        userFormMessage.textContent = response.message
+        userFormMessage.style.color = 'green'
+      } else {
+        userFormMessage.textContent = 'Operación exitosa.'
+        userFormMessage.style.color = 'green'
+      }
+      setTimeout(() => {
+        showUserListView()
+        loadUsers() // Recargar lista después de guardar
+      }, 1500)
+    } catch (error) {
+      console.error('Error al guardar usuario:', error)
+      userFormMessage.textContent = 'Error al guardar usuario: ' + (error.message || 'Error desconocido')
+      userFormMessage.style.color = 'red'
+    }
+  })
+
+  // Adjuntar listeners a los botones de la tabla de usuarios (Editar/Eliminar)
+  function attachUserTableListeners () {
+    document.getElementById('users-table-body').addEventListener('click', async (event) => {
+      if (event.target.classList.contains('edit-user-btn')) {
+        const userId = event.target.dataset.id
+        await loadUserForEdit(userId)
+      } else if (event.target.classList.contains('delete-user-btn')) {
+        const userId = event.target.dataset.id
+        if (confirm('¿Estás seguro de que quieres eliminar este usuario?')) {
+          try {
+            const response = await callApiSecured(`/api/users/${userId}`, { method: 'DELETE' })
+            alert(response.message || 'Usuario eliminado.')
+            loadUsers() // Recargar la lista después de eliminar
+          } catch (error) {
+            console.error('Error al eliminar usuario:', error)
+            alert('Error al eliminar usuario: ' + (error.message || 'Error desconocido'))
+          }
+        }
+      }
+    })
+  }
+  // -----------Funciones para los roles-----------
+  let allAvaliableRoles = []
+
+  // Llama a loadUsers al inicio si la sección de usuarios es la activa por defecto
+  // o se va a activar por alguna lógica inicial.
+  // O puedes mover loadUsers al navUsersLink event listener como hicimos con products.
   // ... Puedes añadir loadEmployees, loadBranches, loadCategories (si tienes una vista principal), loadReports
 
   // --- MANEJO DE CERRAR SESIÓN ---
@@ -412,4 +637,146 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   // Si el dashboard también necesita datos iniciales protegidos, llámalos aquí:
   // await callApiSecured('/api/dashboard-summary');
+  // })
+  // --- Listeners para la gestión de Usuarios y Roles ---
+  // document.addEventListener('DOMContentLoaded', async () => { // Hacemos async para fetchAllRoles
+  // ... Tus listeners existentes para productos ...
+
+  // Listener para el enlace de navegación de usuarios
+  // Cargar todos los roles disponibles al inicio
+  await fetchAllRoles() // Llama a esta función al cargar la página
+
+  // Listener para el botón "Añadir Nuevo Usuario"
+  addUserBtn.addEventListener('click', () => {
+    userForm.reset() // Limpiar el formulario
+    document.getElementById('user-id').value = '' // Asegurarse de que el ID esté vacío para nueva creación
+    document.getElementById('user-password').setAttribute('required', 'true') // Contraseña es obligatoria en creación
+    manageRolesBtn.style.display = 'none' // Ocultar el botón de gestionar roles
+    saveUserBtn.textContent = 'Guardar Nuevo Usuario'
+    userFormMessage.textContent = ''
+    showUserForm()
+  })
+
+  // Listener para el botón "Volver a Usuarios" desde el formulario de usuario
+  backToUsersListBtn.addEventListener('click', () => {
+    showUserListView()
+    loadUsers() // Recargar la lista al volver
+  })
+
+  // Listener para el botón "Gestionar Roles"
+  manageRolesBtn.addEventListener('click', () => {
+    const userId = manageRolesBtn.dataset.userId
+    const userName = manageRolesBtn.dataset.userName
+    const assigneRole = JSON.parse(manageRolesBtn.dataset.assigneRole) // Parsear el array
+    populateRoleCheckboxes(userId, userName, assigneRole)
+    userRolesFormMessage.textContent = ''
+    showUserRolesForm()
+  })
+
+  // Listener para el botón "Volver a Detalles del Usuario" desde el formulario de roles
+  backToUserDetailsBtn.addEventListener('click', () => {
+    const currentUserId = userRolesIdInput.value
+    showUserForm() // Vuelve al formulario principal
+    loadUserForEdit(currentUserId) // Recarga los datos del usuario para mantener el formulario lleno
+  })
+
+  // Manejar el envío del formulario de información básica del usuario
+  userForm.addEventListener('submit', async (event) => {
+    event.preventDefault()
+    const userId = document.getElementById('user-id').value
+    const formData = new FormData(userForm)
+    const userData = Object.fromEntries(formData.entries())
+
+    // Eliminar el campo de ID si es una creación nueva
+    if (!userId) {
+      delete userData.id
+    }
+
+    // Si la contraseña está vacía, no la envíes para actualización
+    if (userId && userData.contrasena === '') {
+      delete userData.contrasena
+    }
+
+    try {
+      let response
+      if (userId) { // Si hay un ID, es una actualización (PUT)
+        document.getElementById('user-password').removeAttribute('required') // Ya no es obligatorio al actualizar
+        response = await callApiSecured(`/api/users/${userId}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(userData)
+        })
+      } else { // Si no hay ID, es una creación (POST)
+        response = await callApiSecured('/api/users', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(userData)
+        })
+      }
+
+      if (response.message) {
+        userFormMessage.textContent = response.message
+        userFormMessage.style.color = 'green'
+      } else {
+        userFormMessage.textContent = 'Operación exitosa.'
+        userFormMessage.style.color = 'green'
+      }
+      setTimeout(() => {
+        // Si es una creación, se vuelve a la lista.
+        // Si es una actualización, se mantiene en el formulario para gestionar roles.
+        if (!userId) {
+          showUserListView()
+          loadUsers()
+        } else {
+          // Mantener en el formulario, quizá con un mensaje de éxito más claro.
+        }
+      }, 1500)
+    } catch (error) {
+      console.error('Error al guardar usuario:', error)
+      userFormMessage.textContent = 'Error al guardar usuario: ' + (error.message || 'Error desconocido')
+      userFormMessage.style.color = 'red'
+    }
+  })
+
+  // Manejar el envío del formulario de roles del usuario
+  document.getElementById('user-roles-form').addEventListener('submit', async (event) => {
+    event.preventDefault()
+    const userId = userRolesIdInput.value
+    const selectedRoleIds = Array.from(rolesCheckboxesDiv.querySelectorAll('input[name="roleIds"]:checked'))
+      .map(checkbox => parseInt(checkbox.value))
+
+    console.log('UserID a enviar:', userId)
+    console.log('Role IDs a enviar:', selectedRoleIds) // <<-- ¡AÑADE ESTE CONSOLE.LOG!
+    console.log('Tipo de Role IDs:', typeof selectedRoleIds, 'Es Array?', Array.isArray(selectedRoleIds)) // <<-- ¡AÑADE ESTE CONSOLE.LOG!
+
+    try {
+      const response = await callApiSecured(`/api/roles/${userId}/roles`, { // Nueva ruta PUT para asignar roles
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ roleIds: selectedRoleIds })
+      })
+
+      if (response.message) {
+        userRolesFormMessage.textContent = response.message
+        userRolesFormMessage.style.color = 'green'
+      } else {
+        userRolesFormMessage.textContent = 'Roles asignados exitosamente.'
+        userRolesFormMessage.style.color = 'green'
+      }
+      setTimeout(() => {
+        showUserListView() // Volver a la lista después de guardar roles
+        loadUsers() // Recargar la lista para ver los roles actualizados
+      }, 1500)
+    } catch (error) {
+      console.error('Error al guardar roles:', error)
+      userRolesFormMessage.textContent = 'Error al guardar roles: ' + (error.message || 'Error desconocido')
+      userRolesFormMessage.style.color = 'red'
+    }
+  })
+
+  // Adjuntar listeners a los botones de la tabla de usuarios (Editar/Eliminar)
+  // Llama a los listeners de la tabla al inicio
+
+  // Llama a loadUsers si la sección de usuarios es la activa por defecto
+  // o se va a activar por alguna lógica inicial (esto ya lo manejas en showSection)
 })

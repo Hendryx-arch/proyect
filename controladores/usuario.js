@@ -3,7 +3,15 @@ import { pool } from '../db/conexion.js'
 import bcryp from 'bcryptjs'
 export const getAllUsers = async (req, res) => {
   try {
-    const [rows] = await pool.execute('SELECT id,nombres,apellidos,ci,correo,telefono,contra FROM persona')
+    const [rows] = await pool.execute(
+      `SELECT p.id,p.nombres,p.apellidos,p.ci,p.correo,p.telefono,p.contra ,
+      GROUP_CONCAT(r.nombre_rol SEPARATOR ',') AS roles 
+      FROM persona p LEFT JOIN user_rol ur 
+      ON p.id = ur.persona_id 
+      LEFT JOIN Roles r ON ur.rol_id=r.id 
+       GROUP BY p.id ORDER BY p.id`
+    )
+
     res.json(rows)
   } catch (error) {
     console.error('error al obtener usuarios', error)
@@ -15,8 +23,28 @@ export const getAllUsers = async (req, res) => {
 export const getUserById = async (req, res) => {
   const { id } = req.params
   try {
-    const [rows] = await pool.execute('SELECT id ,nombres,apellidos,ci,correo,telefono,contra FROM persona where id=?', [id])
-    if (rows.length == 0) {
+    const [rows] = await pool.execute(`
+            SELECT
+                p.id,
+                p.nombres,
+                p.apellidos,
+                p.ci,
+                p.correo,
+                p.telefono,
+                p.contra,
+                
+                GROUP_CONCAT(r.nombre_rol SEPARATOR ', ') AS roles -- Obtiene todos los nombres de rol
+            FROM
+                persona p
+            LEFT JOIN
+                user_rol ur ON p.id = ur.persona_id
+            LEFT JOIN
+                Roles r ON ur.rol_id = r.id
+            WHERE p.id = ?
+            GROUP BY p.id;
+        `, [id]
+    )
+    if (rows.length === 0) {
       return res.status(404).json({ message: 'Usuario no encontrado.' })
     }
     res.json(rows[0])
@@ -27,8 +55,6 @@ export const getUserById = async (req, res) => {
 }
 export const createUser = async (req, res) => {
   const { nombres, apellidos, ci, correo, telefono, contra } = req.body
-  // hay que hashear la contraseña
-  // **Paso 1: Validación de Datos (¡Crucial!)**
   // Si usas Zod, sería algo así:
   // const validationResult = validateUserSchema({ nombre, apellido, email, password, telefono, direccion });
   // if (!validationResult.success) {
@@ -71,10 +97,10 @@ export const updateUser = async (req, res) => {
 }
 
 export const deleteUser = async (req, res) => {
-  const { is } = req.params
+  const { id } = req.params
   try {
     const [result] = await pool.execute('DELETE FROM persona WHERE id = ?', [id])
-    if (result.affectedRows == 0) {
+    if (result.affectedRows === 0) {
       return res.status(404).json({ message: 'Usuario no encontrado' })
     }
     res.status(204).send()

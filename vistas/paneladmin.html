@@ -16,7 +16,7 @@
                     <li><a href="#" id="nav-dashboard" class="active">📊 Panel Principal</a></li>
                     <li><a href="#" id="nav-products">📦 Gestión de Productos</a></li>
                     <li><a href="#" id="nav-orders">🛒 Gestión de Pedidos</a></li>
-                    <li><a href="#" id="nav-clients">🧑‍🤝‍🧑 Gestión de Clientes</a></li>
+                    <li><a href="#" id="nav-users">🧑‍🤝‍🧑 Gestión de Clientes</a></li>
                     <li><a href="#" id="nav-employees">🚚 Gestión de Empleados/Repartidores</a></li>
                     <li><a href="#" id="nav-branches">🏢 Gestión de Sucursales</a></li>
                     <li><a href="#" id="nav-categories">🏷️ Gestión de Categorías</a></li>
@@ -38,8 +38,8 @@
             <section id="dashboard-section" class="content-section active">
                 <h2>Resumen General</h2>
                 <p>Aquí puedes ver un vistazo rápido de las métricas clave de tu negocio.</p>
-                </section>
-             <section id="products-section" class="content-section">
+            </section>
+            <section id="products-section" class="content-section">
                 <h2>Gestión de Productos</h2>
                 <button id="add-product-btn" class="add-new-btn">➕ Añadir Nuevo Producto</button>
                 
@@ -54,10 +54,11 @@
                                 <th>Precio</th>
                                 <th>Stock</th>
                                 <th>Categoría</th>
+                                <th>imagen</th>
                                 <th>Acciones</th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody >
                             </tbody>
                     </table>
                 </div>
@@ -97,11 +98,114 @@
                         <p id="product-form-message" class="error-text"></p>
                     </form>
                 </div>
-            </section>
+            </section> <!-- productos seccion-->
             <section id="orders-section" class="content-section">
                 <h2>Gestión de Pedidos</h2>
-                </section>
-            </main>
+            </section><!--pedidos seccion-->
+            <section id="users-section" class="content-section">
+                <h2>Gestión de Usuarios</h2>
+                <button id="add-user-btn" class="primary-btn">Añadir Nuevo Usuario</button>
+
+                <div id="users-list">
+                    <h3>Lista de Usuarios</h3>
+                    <table id="users-table-body" class="users-table" style="display: none;">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Nombre</th>
+                                <th>apellido</th>
+                                <th>ci</th>
+                                <th>Correo</th>
+                                <th>Telefono</th>
+                                <th>Rol</th>
+                                <th>Acciones</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                    <p id="users-list-message" class="info-text" style="display: none;"></p>
+                </div>
+
+                <div id="user-form-view" class="detail-form-container" style="display: none;">
+                    <h3>Detalles del Usuario</h3>
+                    <form id="user-form">
+                        <label for="user-id">ID Usuario:</label>
+                        <input type="text" id="user-id" name="id" readonly disabled><br>
+
+                        <label for="user-name">Nombres:</label>
+                        <input type="text" id="user-name" name="nombre" required><br>
+                        
+                        <label for="user-apellido">Apellidos:</label>
+                        <input type="text" id="user-apellido" name="apellido" required><br>
+                        
+                        <label for="user-ci">C.I. / Nit:</label>
+                        <input type="text" id="user-ci" name="ci" required><br>
+
+                        <label for="user-email">Correo:</label>
+                        <input type="email" id="user-email" name="correo" required><br>
+
+                        <label for="user-Telefono">Telefono:</label>
+                        <input type="number" id="user-telefono" name="telefono" required><br>
+
+                        <label for="user-password">Contraseña (dejar vacío para no cambiar):</label>
+                        <input type="password" id="user-password" name="contrasena"><br>
+
+                        <button type="submit" class="primary-btn" id="save-user-btn">Guardar Usuario</button>
+                         <button type="button" class="action-btn" id="manage-roles-btn" style="display: none;">Gestionar Roles</button>
+                        <button type="button" class="back-list-btn" id="back-to-users-list-btn">Volver a Usuarios</button>
+                        <p id="users-form-message" class="error-text"></p>
+                    </form>
+                </div>
+                <div id="user-roles-form-container" class="detail-form-container" style="display: none;">
+                    <h3>Asignar Roles a <span id="user-roles-name"></span></h3>
+                     <form id="user-roles-form">
+                         <input type="hidden" id="user-roles-id" name="userId">
+                        <div id="roles-checkboxes">
+                        </div>
+                         <button type="submit" class="primary-btn" id="save-user-roles-btn">Guardar Roles</button>
+                          <button type="button" class="back-list-btn" id="back-to-user-details-btn">Volver a Detalles del Usuario</button>
+                    <p id="user-roles-message" class="error-text"></p>
+                    </form>
+                </div>
+            </section><!-- clientes seccion-->
+            <section id="categories-section" class="content-section">
+    <h2>Gestión de Categorías</h2>
+    <button id="add-category-btn" class="primary-btn">Añadir Nueva Categoría</button>
+
+    <div id="categories-list" class="list-container">
+        <h3>Lista de Categorías</h3>
+        <table id="categories-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nombre</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody id="categories-table-body">
+                </tbody>
+        </table>
+        <p id="categories-list-message" class="info-text" style="display: none;"></p>
+    </div>
+
+    <div id="category-form-container" class="detail-form-container" style="display: none;">
+        <h3>Detalles de la Categoría</h3>
+        <form id="category-form">
+            <label for="category-id">ID Categoría:</label>
+            <input type="text" id="category-id" name="id" readonly disabled><br>
+
+            <label for="category-name">Nombre:</label>
+            <input type="text" id="category-name" name="nombre" required><br>
+
+            <button type="submit" class="primary-btn" id="save-category-btn">Guardar Categoría</button>
+            <button type="button" class="back-list-btn" id="back-to-categories-list-btn">Volver a Categorías</button>
+            <p id="category-form-message" class="error-text"></p>
+        </form>
+    </div>
+            </section><!-- categorias seccion-->
+            
+        </main>
     </div>
 
     <script src="/js/script.js"></script> </body>

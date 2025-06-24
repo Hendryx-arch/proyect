@@ -163,6 +163,8 @@ form label {
 
 form input[type="text"],
 form input[type="number"],
+form input[type="password"],
+form input[type="email"],
 form textarea {
     width: calc(100% - 22px);
     padding: 10px;
