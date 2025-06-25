@@ -98,114 +98,185 @@
                         <p id="product-form-message" class="error-text"></p>
                     </form>
                 </div>
-            </section> <!-- productos seccion-->
-            <section id="orders-section" class="content-section">
+            </section>
+              <section id="orders-section" class="content-section">
                 <h2>Gestión de Pedidos</h2>
-            </section><!--pedidos seccion-->
-            <section id="users-section" class="content-section">
-                <h2>Gestión de Usuarios</h2>
-                <button id="add-user-btn" class="primary-btn">Añadir Nuevo Usuario</button>
 
-                <div id="users-list">
-                    <h3>Lista de Usuarios</h3>
-                    <table id="users-table-body" class="users-table" style="display: none;">
+                <div id="order-list-view">
+                    <h3>Lista de Pedidos</h3>
+                    <p id="order-list-message">Cargando pedidos...</p>
+                    <table class="data-table" id="orders-table" style="display: none;">
+                        <thead>
+                            <tr>
+                                <th>ID Pedido</th>
+                                <th>Cliente</th>
+                                <th>Fecha</th>
+                                <th>Total</th>
+                                <th>Estado</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            </tbody>
+                    </table>
+                </div>
+<!-- Formulario para añadir o ver pedidos -->
+                <div id="order-detail-view" class="detail-form-container" style="display:none;">
+                    <h3 id="order-detail-title">Detalle del Pedido #<span id="order-detail-id"></span></h3>
+                    <div class="order-info-grid">
+                        <div><strong>Cliente:</strong> <span id="order-detail-client-name"></span></div>
+                        <div><strong>Email:</strong> <span id="order-detail-client-email"></span></div>
+                        <div><strong>Fecha Pedido:</strong> <span id="order-detail-date"></span></div>
+                        <div><strong>Total:</strong> <span id="order-detail-total"></span></div>
+                        <div><strong>Dirección de Envío:</strong> <span id="order-detail-address"></span></div>
+                    </div>
+
+                    <h4>Artículos del Pedido:</h4>
+                    <table class="data-table" id="order-items-table">
+                        <thead>
+                            <tr>
+                                <th>Producto</th>
+                                <th>Cantidad</th>
+                                <th>Precio Unitario</th>
+                                <th>Subtotal</th>
+                            </tr>
+                        </thead>
+                        <tbody id="order-items-tbody">
+                            </tbody>
+                    </table>
+
+                    <div class="form-group">
+                        <label for="order-status-select">Cambiar Estado:</label>
+                        <select id="order-status-select">
+                            <option value="Pendiente">Pendiente</option>
+                            <option value="Procesando">Procesando</option>
+                            <option value="Enviado">Enviado</option>
+                            <option value="Entregado">Entregado</option>
+                            <option value="Cancelado">Cancelado</option>
+                        </select>
+                    </div>
+                    
+                    <button type="button" class="primary-btn" id="update-order-status-btn">Actualizar Estado</button>
+                    <button type="button" class="back-list-btn" id="back-to-orders-list-btn">Volver a Pedidos</button>
+                    <p id="order-form-message" class="error-text"></p>
+                </div>
+            </section>
+            <section id="clients-section" class="content-section">
+                <h2>Gestión de Clientes</h2>
+                <button id="add-client-btn" class="add-new-btn">➕ Añadir Nuevo Cliente</button>
+
+                <div id="client-list-view">
+                    <h3>Lista de Clientes</h3>
+                    <p id="client-list-message">Cargando clientes...</p>
+                    <table class="data-table" id="clients-table" style="display: none;">
                         <thead>
                             <tr>
                                 <th>ID</th>
-                                <th>Nombre</th>
-                                <th>apellido</th>
-                                <th>ci</th>
-                                <th>Correo</th>
-                                <th>Telefono</th>
-                                <th>Rol</th>
+                                <th>Nombres</th>
+                                <th>Apellidos</th>
+                                <th>Email</th>
+                                <th>Teléfono</th>
+                                <th>Dirección</th>
                                 <th>Acciones</th>
-                        </tr>
+                            </tr>
                         </thead>
                         <tbody>
-                        </tbody>
+                            </tbody>
                     </table>
-                    <p id="users-list-message" class="info-text" style="display: none;"></p>
                 </div>
 
-                <div id="user-form-view" class="detail-form-container" style="display: none;">
-                    <h3>Detalles del Usuario</h3>
-                    <form id="user-form">
-                        <label for="user-id">ID Usuario:</label>
-                        <input type="text" id="user-id" name="id" readonly disabled><br>
+                <div id="client-form-view" class="detail-form-container" style="display:none;">
+                    <h3 id="client-form-title">Añadir Nuevo Cliente</h3>
+                    <form id="client-form">
+                        <label for="client-id">ID Cliente:</label>
+                        <input type="text" id="client-id" name="id" readonly disabled><br>
 
-                        <label for="user-name">Nombres:</label>
-                        <input type="text" id="user-name" name="nombre" required><br>
-                        
-                        <label for="user-apellido">Apellidos:</label>
-                        <input type="text" id="user-apellido" name="apellido" required><br>
-                        
-                        <label for="user-ci">C.I. / Nit:</label>
-                        <input type="text" id="user-ci" name="ci" required><br>
+                        <label for="client-names">Nombres:</label>
+                        <input type="text" id="client-names" name="nombres" required><br>
 
-                        <label for="user-email">Correo:</label>
-                        <input type="email" id="user-email" name="correo" required><br>
+                        <label for="client-lastnames">Apellidos:</label>
+                        <input type="text" id="client-lastnames" name="apellidos" required><br>
 
-                        <label for="user-Telefono">Telefono:</label>
-                        <input type="number" id="user-telefono" name="telefono" required><br>
+                        <label for="client-email">Email:</label>
+                        <input type="email" id="client-email" name="email" required><br>
 
-                        <label for="user-password">Contraseña (dejar vacío para no cambiar):</label>
-                        <input type="password" id="user-password" name="contrasena"><br>
+                        <label for="client-phone">Teléfono:</label>
+                        <input type="text" id="client-phone" name="telefono"><br>
 
-                        <button type="submit" class="primary-btn" id="save-user-btn">Guardar Usuario</button>
-                         <button type="button" class="action-btn" id="manage-roles-btn" style="display: none;">Gestionar Roles</button>
-                        <button type="button" class="back-list-btn" id="back-to-users-list-btn">Volver a Usuarios</button>
-                        <p id="users-form-message" class="error-text"></p>
+                        <label for="client-address">Dirección:</label>
+                        <textarea id="client-address" name="direccion" rows="3"></textarea><br>
+
+                        <button type="submit" class="primary-btn" id="save-client-btn">Guardar Cliente</button>
+                        <button type="button" class="back-list-btn" id="back-to-clients-list-btn">Volver a Clientes</button>
+                        <p id="client-form-message" class="error-text"></p>
                     </form>
                 </div>
-                <div id="user-roles-form-container" class="detail-form-container" style="display: none;">
-                    <h3>Asignar Roles a <span id="user-roles-name"></span></h3>
-                     <form id="user-roles-form">
-                         <input type="hidden" id="user-roles-id" name="userId">
-                        <div id="roles-checkboxes">
-                        </div>
-                         <button type="submit" class="primary-btn" id="save-user-roles-btn">Guardar Roles</button>
-                          <button type="button" class="back-list-btn" id="back-to-user-details-btn">Volver a Detalles del Usuario</button>
-                    <p id="user-roles-message" class="error-text"></p>
+            </section>
+            <section id="employees-section" class="content-section">
+                <h2>Gestión de Empleados/Repartidores</h2>
+                <button id="add-employee-btn" class="add-new-btn">➕ Añadir Nuevo Empleado</button>
+
+                <div id="employee-list-view">
+                    <h3>Lista de Empleados</h3>
+                    <p id="employee-list-message">Cargando empleados...</p>
+                    <table class="data-table" id="employees-table" style="display: none;">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Nombres</th>
+                                <th>Apellidos</th>
+                                <th>Email</th>
+                                <th>Teléfono</th>
+                                <th>Rol</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            </tbody>
+                    </table>
+                </div>
+
+                <div id="employee-form-view" class="detail-form-container" style="display:none;">
+                    <h3 id="employee-form-title">Añadir Nuevo Empleado</h3>
+                    <form id="employee-form">
+                        <label for="employee-id">ID Empleado:</label>
+                        <input type="text" id="employee-id" name="id" readonly disabled><br>
+
+                        <label for="employee-names">Nombres:</label>
+                        <input type="text" id="employee-names" name="nombres" required><br>
+
+                        <label for="employee-lastnames">Apellidos:</label>
+                        <input type="text" id="employee-lastnames" name="apellidos" required><br>
+
+                        <label for="employee-email">Email:</label>
+                        <input type="email" id="employee-email" name="email" required><br>
+
+                        <label for="employee-phone">Teléfono:</label>
+                        <input type="text" id="employee-phone" name="telefono"><br>
+                        
+                        <label for="employee-role">Rol:</label>
+                        <select id="employee-role" name="rol" required>
+                            <option value="">Selecciona un rol</option>
+                            <option value="Administrador">Administrador</option>
+                            <option value="Repartidor">Repartidor</option>
+                            <option value="Almacén">Almacén</option>
+                            <option value="Cajero">Cajero</option>
+                        </select><br>
+
+                        <label for="employee-password">Contraseña (solo para nuevos/cambio):</label>
+                        <input type="password" id="employee-password" name="password"><br>
+                        
+                        <label for="employee-confirm-password">Confirmar Contraseña:</label>
+                        <input type="password" id="employee-confirm-password" name="confirm_password"><br>
+
+
+                        <button type="submit" class="primary-btn" id="save-employee-btn">Guardar Empleado</button>
+                        <button type="button" class="back-list-btn" id="back-to-employees-list-btn">Volver a Empleados</button>
+                        <p id="employee-form-message" class="error-text"></p>
                     </form>
                 </div>
-            </section><!-- clientes seccion-->
-            <section id="categories-section" class="content-section">
-    <h2>Gestión de Categorías</h2>
-    <button id="add-category-btn" class="primary-btn">Añadir Nueva Categoría</button>
-
-    <div id="categories-list" class="list-container">
-        <h3>Lista de Categorías</h3>
-        <table id="categories-table">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Nombre</th>
-                    <th>Acciones</th>
-                </tr>
-            </thead>
-            <tbody id="categories-table-body">
-                </tbody>
-        </table>
-        <p id="categories-list-message" class="info-text" style="display: none;"></p>
-    </div>
-
-    <div id="category-form-container" class="detail-form-container" style="display: none;">
-        <h3>Detalles de la Categoría</h3>
-        <form id="category-form">
-            <label for="category-id">ID Categoría:</label>
-            <input type="text" id="category-id" name="id" readonly disabled><br>
-
-            <label for="category-name">Nombre:</label>
-            <input type="text" id="category-name" name="nombre" required><br>
-
-            <button type="submit" class="primary-btn" id="save-category-btn">Guardar Categoría</button>
-            <button type="button" class="back-list-btn" id="back-to-categories-list-btn">Volver a Categorías</button>
-            <p id="category-form-message" class="error-text"></p>
-        </form>
-    </div>
-            </section><!-- categorias seccion-->
-            
-        </main>
+            </section>    
+            </main>
     </div>
 
     <script src="/js/script.js"></script> </body>
